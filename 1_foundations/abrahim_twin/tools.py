@@ -44,7 +44,7 @@ class AiTools:
             )
         return results
 
-    def get_tools():
+    def get_tools(self):
         return [
             {
                 "type": "function",

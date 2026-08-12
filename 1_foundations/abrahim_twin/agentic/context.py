@@ -8,30 +8,28 @@ def get_twin_reviewer_instructions():
                 - The digital twin must show interest
                 - It should mention at the end that its knowledge is limited and it can only respond based on the linkedin profile and summary given
                 
-                Respond always with a JSON contaning the boolean variable called is_ok, indicating True or False and another string variable called suggestions with the suggestions to enhance the response.
+                Respond always with a JSON contaning the boolean variable called is_ok, indicating True when there is no need to make changes to the response or False when there are some changes needed to apply and another string variable called suggestions with the suggestions to enhance the response.
                 Example: {"is_ok": true, "suggestions": "<your_suggestions_here>"}.
                 """,
     }
 
 
 def get_twin_reviewer_user_prompt(summary, profile, assistant_response, history):
-    return (
-        {
-            "role": "user",
-            "content": f"""The digital twin response is: {assistant_response}
+    return {
+        "role": "user",
+        "content": f"""The digital twin response is: {assistant_response}
                                     The following is the summary and linkedin profile from the person the digital twin is representing:
                                     <summary>{summary}</summary>
                                     <profile>{profile}</profile>
                                     <conversation_history>{history}</conversation_history>
                                     """,
-        },
-    )
+    }
 
 
 def get_validator_instructions():
     return {
-            "role": "system",
-            "content": """
+        "role": "system",
+        "content": """
             Your role is to verify if the user is requesting information that a recruiter might ask a candidate for a job application.
             Read the message and verify if it indicates that the user is asking for information like experience, career, skills, background, education or any other related information that a recruiter would ask to a candidate.
             Steps to follow:
@@ -40,15 +38,12 @@ def get_validator_instructions():
             - If the user is asking for something else or nothing related to the candidate's profile or or professional information, return a JSON with a boolean variable called review_twin_response equals to False
             Note: Respond always with a JSON contaning the boolean variable called review_twin_response, indicating True or False.
             Example: {"review_twin_response": true} or {"review_twin_response": false}.""",
-        },
-    
+    }
 
 
 def get_validator_user_prompt(user_message):
-    return (
-        {
-            "role": "user",
-            "content": f"""The user message is following: 
+    return {
+        "role": "user",
+        "content": f"""The user message is following: 
                             <user_message>{user_message}</user_message>""",
-        },
-    )
+    }

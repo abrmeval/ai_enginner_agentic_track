@@ -11,11 +11,11 @@ class TwinResponseReviewer:
         self.client = OpenAI(base_url=endpoint, api_key=api_key)
         self.instructions = instructions
 
-    def get_review(self, messages, tools):
-        message_list = [self.instructions] + messages
+    def get_review(self, message, tools):
+        message_list = [self.instructions, message]
 
         response = self.client.chat.completions.create(
-            model="openai/gpt-oss-120b",
+            model="gpt-5-nano",
             messages=message_list,
             tools=tools,
             max_completion_tokens=5000,
@@ -34,11 +34,11 @@ class UserMessageValidator:
         self.client = OpenAI(base_url=endpoint, api_key=api_key)
         self.instructions = instructions
 
-    def validate_user_message(self, messages, tools):
-        message_list = [self.instructions] + messages
+    def validate_user_message(self, message, tools):
+        message_list = [self.instructions, message]
 
         response = self.client.chat.completions.create(
-            model="openai/gpt-oss-120b",
+            model="openrouter/free",
             messages=message_list,
             tools=tools,
             max_completion_tokens=5000,

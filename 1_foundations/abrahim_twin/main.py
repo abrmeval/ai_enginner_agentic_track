@@ -2,11 +2,12 @@ import gradio as gr
 import context
 from digital_twin import DigitalTwin
 from providers import AiProvider
-import agents.context as agents_context
-from agents.agents import TwinResponseReviewer, UserMessageValidator
+import agentic.context as agents_context
+from agentic.agents import TwinResponseReviewer, UserMessageValidator
 from tools import AiTools
 from notifications import NotificationClient
 import json
+from styles import CSS, JS, EXAMPLES
 
 
 def chat(message, history):
@@ -28,7 +29,7 @@ def chat(message, history):
             # We append the result to the message list
             messages.extend(results)
 
-            # Call the AI model
+            # Call the digital twin
             response = digital_twin.prompt_agent(messages, tools)
             tool_was_called = True
 
@@ -49,7 +50,7 @@ def chat(message, history):
                 assistant_response,
                 json.dumps(messages),
             )
-            review = response_reviewer.get_review([user_prompt], tools)
+            review = response_reviewer.get_review(user_prompt, tools)
 
             if review.get("is_ok", False):
                 break
@@ -63,8 +64,9 @@ def chat(message, history):
                     }
                 ]
             )
-        tool_was_called = False
-
+        else: 
+            tool_was_called = False
+            break
     return assistant_response
 
 
@@ -88,4 +90,10 @@ message_validator = UserMessageValidator(
 )
 
 # Launch the Web UI
-gr.ChatInterface(chat).launch(inbrowser=True)
+gr.ChatInterface(
+        chat,
+        examples=EXAMPLES,
+        title="Digital Twin",
+        description="Talk to my AI twin about my career",
+        chatbot=gr.Chatbot(show_label=False),
+    ).launch(css=CSS, js=JS, theme=gr.themes.Base())
